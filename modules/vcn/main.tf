@@ -54,17 +54,19 @@ resource "oci_core_route_table" "public" {
 # -------------------------
 
 resource "oci_core_route_table" "private" {
-  count = var.enable_nat_gateway ? 1 : 0
-
   compartment_id = var.compartment_id
   vcn_id         = oci_core_vcn.this.id
 
   display_name = "${var.vcn_name}-private-rt"
 
-  route_rules {
-    destination       = "0.0.0.0/0"
-    destination_type  = "CIDR_BLOCK"
-    network_entity_id = oci_core_nat_gateway.this[0].id
+  dynamic "route_rules" {
+    for_each = var.enable_nat_gateway ? [1] : []
+
+    content {
+      destination       = "0.0.0.0/0"
+      destination_type  = "CIDR_BLOCK"
+      network_entity_id = oci_core_nat_gateway.this[0].id
+    }
   }
 }
 
@@ -160,9 +162,7 @@ resource "oci_core_subnet" "private" {
 
   cidr_block = var.private_subnet_cidr
 
-  route_table_id = var.enable_nat_gateway ? (
-    oci_core_route_table.private[0].id
-  ) : null
+  route_table_id = oci_core_route_table.private.id
 
   security_list_ids = [
     oci_core_security_list.private.id
