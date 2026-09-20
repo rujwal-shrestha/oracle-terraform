@@ -23,14 +23,14 @@ resource "oci_core_internet_gateway" "this" {
 # NAT Gateway
 # -------------------------
 
-resource "oci_core_nat_gateway" "this" {
-  count = var.enable_nat_gateway ? 1 : 0
+# resource "oci_core_nat_gateway" "this" {
+#   count = var.enable_nat_gateway ? 1 : 0
 
-  compartment_id = var.compartment_id
-  vcn_id         = oci_core_vcn.this.id
+#   compartment_id = var.compartment_id
+#   vcn_id         = oci_core_vcn.this.id
 
-  display_name = "${var.vcn_name}-nat"
-}
+#   display_name = "${var.vcn_name}-nat"
+# }
 
 # -------------------------
 # Public Route Table
@@ -53,22 +53,22 @@ resource "oci_core_route_table" "public" {
 # Private Route Table
 # -------------------------
 
-resource "oci_core_route_table" "private" {
-  compartment_id = var.compartment_id
-  vcn_id         = oci_core_vcn.this.id
+# resource "oci_core_route_table" "private" {
+#   compartment_id = var.compartment_id
+#   vcn_id         = oci_core_vcn.this.id
 
-  display_name = "${var.vcn_name}-private-rt"
+#   display_name = "${var.vcn_name}-private-rt"
 
-  dynamic "route_rules" {
-    for_each = var.enable_nat_gateway ? [1] : []
+#   dynamic "route_rules" {
+#     for_each = var.enable_nat_gateway ? [1] : []
 
-    content {
-      destination       = "0.0.0.0/0"
-      destination_type  = "CIDR_BLOCK"
-      network_entity_id = oci_core_nat_gateway.this[0].id
-    }
-  }
-}
+#     content {
+#       destination       = "0.0.0.0/0"
+#       destination_type  = "CIDR_BLOCK"
+#       network_entity_id = oci_core_nat_gateway.this[0].id
+#     }
+#   }
+# }
 
 # -------------------------
 # Public Security List
@@ -120,17 +120,17 @@ resource "oci_core_security_list" "public" {
 # Private Security List
 # -------------------------
 
-resource "oci_core_security_list" "private" {
-  compartment_id = var.compartment_id
-  vcn_id         = oci_core_vcn.this.id
+# resource "oci_core_security_list" "private" {
+#   compartment_id = var.compartment_id
+#   vcn_id         = oci_core_vcn.this.id
 
-  display_name = "${var.vcn_name}-private-sl"
+#   display_name = "${var.vcn_name}-private-sl"
 
-  egress_security_rules {
-    protocol    = "all"
-    destination = "0.0.0.0/0"
-  }
-}
+#   egress_security_rules {
+#     protocol    = "all"
+#     destination = "0.0.0.0/0"
+#   }
+# }
 
 # -------------------------
 # Public Subnet
@@ -154,21 +154,21 @@ resource "oci_core_subnet" "public" {
 # Private Subnet
 # -------------------------
 
-resource "oci_core_subnet" "private" {
-  compartment_id = var.compartment_id
-  vcn_id         = oci_core_vcn.this.id
+# resource "oci_core_subnet" "private" {
+#   compartment_id = var.compartment_id
+#   vcn_id         = oci_core_vcn.this.id
 
-  display_name = "${var.vcn_name}-private-subnet"
+#   display_name = "${var.vcn_name}-private-subnet"
 
-  cidr_block = var.private_subnet_cidr
+#   cidr_block = var.private_subnet_cidr
 
-  route_table_id = oci_core_route_table.private.id
+#   route_table_id = oci_core_route_table.private.id
 
-  security_list_ids = [
-    oci_core_security_list.private.id
-  ]
+#   security_list_ids = [
+#     oci_core_security_list.private.id
+#   ]
 
-  dns_label = "private"
+#   dns_label = "private"
 
-  prohibit_public_ip_on_vnic = true
-}
+#   prohibit_public_ip_on_vnic = true
+# }

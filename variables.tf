@@ -19,11 +19,11 @@ variable "public_subnet_cidr" {
   type = string
 }
 
-variable "private_subnet_cidr" {
-  type = string
-}
+# variable "private_subnet_cidr" {
+#   type = string
+# }
 
-variable "enable_nat_gateway" {
-  type    = bool
-  default = false
-}
+# variable "enable_nat_gateway" {
+#   type    = bool
+#   default = false
+# }

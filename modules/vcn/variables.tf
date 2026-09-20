@@ -24,13 +24,13 @@ variable "public_subnet_cidr" {
   type        = string
 }
 
-variable "private_subnet_cidr" {
-  description = "Private subnet CIDR"
-  type        = string
-}
+# variable "private_subnet_cidr" {
+#   description = "Private subnet CIDR"
+#   type        = string
+# }
 
-variable "enable_nat_gateway" {
-  description = "Enable NAT Gateway"
-  type        = bool
-  default     = true
-}
+# variable "enable_nat_gateway" {
+#   description = "Enable NAT Gateway"
+#   type        = bool
+#   default     = true
+# }
